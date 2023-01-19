@@ -1,6 +1,8 @@
 package com.example.demosurfaceview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -92,6 +94,8 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.img);
+        figuras.add(new Imagen(500F, 500F,bmp, (int) (bmp.getHeight()*0.3), (int) (bmp.getWidth()*0.3)));
         hilo = new HiloJuego(this);
         hilo.setRun(true);
         hilo.start();
