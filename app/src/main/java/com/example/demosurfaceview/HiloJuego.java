@@ -22,7 +22,7 @@ public class HiloJuego extends Thread{
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         System.out.println("Pintado");
         super.run();
         while (run==true){
@@ -35,12 +35,21 @@ public class HiloJuego extends Thread{
                         Paint p = new Paint();
                         p.setColor(Color.RED);
                         p.setAntiAlias(true);
-                        for (Figura figura:mover.getFiguras()) {
-                            figura.moverFigura(canvas,p);
+
+                        if (mover.modificandoFig==false){
+                            for (Figura figura:mover.getFiguras()) {
+                                figura.moverFigura(canvas,p);
+                            }
+                        } else{
+                            wait();
                         }
+
+
                         mover.postInvalidate();
                     }
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             } finally {
                 if (canvas!=null){
                     holder.unlockCanvasAndPost(canvas);

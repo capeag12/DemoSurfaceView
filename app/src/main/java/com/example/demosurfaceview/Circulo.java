@@ -30,6 +30,15 @@ public class Circulo extends Figura {
         }
         else return false;
     }
+    
+    public boolean detectarCirculo(Circulo c){
+        return estaDentro(c.getX(),c.getY());
+
+    }
+
+    public void aumentarRadio(float radio){
+        this.radio+=radio;
+    }
 
     @Override
     public void actualizarFigura(float desX, float desY) {

@@ -23,6 +23,7 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
     private float iniX;
     private float iniY;
     private boolean pulsado = false;
+    boolean modificandoFig = false;
     public MoverFigura(Context context) {
         super(context);
         figuras = new ArrayList<>();
@@ -30,6 +31,7 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
         setBackgroundColor(Color.WHITE);
         figuras.add(new Circulo(500,500,140));
         figuras.add(new Rectangulo(100,900,280,280));
+        figuras.add(new Circulo(900,900, 70));
     }
 
     @Override
@@ -76,6 +78,30 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
                     iniX = event.getX();
                     iniY = event.getY();
                     System.out.println("Moviendose");
+
+                    if (figuraActiva instanceof Circulo){
+                        Circulo circuloActivo = (Circulo) figuraActiva;
+
+                        synchronized (this.figuras){
+                            this.modificandoFig = true;
+                            for (int i = 0; i<figuras.size();i++) {
+                                Figura f = figuras.get(i);
+                                if (f instanceof Circulo){
+                                    Circulo c = (Circulo) f;
+                                    if (circuloActivo.detectarCirculo(c)){
+                                        if (circuloActivo.getRadio()>c.getRadio()){
+                                            float radio = c.getRadio();
+                                            this.figuras.remove(f);
+                                            circuloActivo.aumentarRadio(radio);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            this.modificandoFig=false;
+                        }
+
+                    }
                 }
 
 
