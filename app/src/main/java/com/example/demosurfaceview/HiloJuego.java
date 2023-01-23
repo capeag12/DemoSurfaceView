@@ -11,6 +11,7 @@ public class HiloJuego extends Thread{
     private boolean run;
 
 
+
     public HiloJuego(MoverFigura mover) {
         this.mover = mover;
         this.holder = this.mover.getHolder();

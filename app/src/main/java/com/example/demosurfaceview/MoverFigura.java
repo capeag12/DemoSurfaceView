@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -24,6 +25,7 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
     private float iniY;
     private boolean pulsado = false;
     boolean modificandoFig = false;
+    private Boton btnAñadir;
     public MoverFigura(Context context) {
         super(context);
         figuras = new ArrayList<>();
@@ -32,6 +34,7 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
         figuras.add(new Circulo(500,500,140));
         figuras.add(new Rectangulo(100,900,280,280));
         figuras.add(new Circulo(900,900, 70));
+
     }
 
     @Override
@@ -44,6 +47,9 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
         ) {
             f.moverFigura(canvas,p);
         }
+
+        canvas.drawRect(new Rect(0,0, getWidth(), (int) (getHeight()*0.10)),p);
+        btnAñadir.dibujarControl(canvas);
 
     }
 
@@ -98,8 +104,9 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
                                     }
                                 }
                             }
-                            this.modificandoFig=false;
+
                         }
+                        this.modificandoFig=false;
 
                     }
                 }
@@ -122,6 +129,8 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.img);
         figuras.add(new Imagen(500F, 500F,bmp, (int) (bmp.getHeight()*0.3), (int) (bmp.getWidth()*0.3)));
+        btnAñadir = new Boton("+", 100, 100, 50,Color.BLUE);
+
         hilo = new HiloJuego(this);
         hilo.setRun(true);
         hilo.start();
