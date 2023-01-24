@@ -37,20 +37,19 @@ public class HiloJuego extends Thread{
                         p.setColor(Color.RED);
                         p.setAntiAlias(true);
 
-                        if (mover.modificandoFig==false){
-                            for (Figura figura:mover.getFiguras()) {
-                                figura.moverFigura(canvas,p);
+                            synchronized (mover.getFiguras()){
+                                for (Figura figura:mover.getFiguras()) {
+
+                                    figura.moverFigura(canvas,p);
+                                }
+                                notify();
                             }
-                        } else{
-                            wait();
-                        }
+
 
 
                         mover.postInvalidate();
                     }
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             } finally {
                 if (canvas!=null){
                     holder.unlockCanvasAndPost(canvas);

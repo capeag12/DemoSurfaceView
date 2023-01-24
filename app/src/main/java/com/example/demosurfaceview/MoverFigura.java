@@ -45,11 +45,32 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
         p.setAntiAlias(true);
         for (Figura f:figuras
         ) {
-            f.moverFigura(canvas,p);
+            if (f instanceof Rectangulo){
+                Paint pRect = new Paint();
+                pRect.setColor(Color.BLUE);
+                f.moverFigura(canvas,pRect);
+            }
+            else if (f instanceof Circulo){
+                p.setColor(Color.RED);
+                f.moverFigura(canvas,p);
+            }
         }
 
         canvas.drawRect(new Rect(0,0, getWidth(), (int) (getHeight()*0.10)),p);
         btnAñadir.dibujarControl(canvas);
+
+    }
+
+    private void generarCirculoAleatorio(){
+        float x = (float) (Math.random()*(getWidth()-23));
+        float y = (float) (Math.random()*(getHeight()-20));
+
+        synchronized (this.figuras){
+            this.figuras.add(new Circulo(x,y,42));
+
+        }
+
+
 
     }
 
@@ -62,6 +83,10 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
 
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:{
+
+                if (btnAñadir.estaDentro(x,y)){
+                    generarCirculoAleatorio();
+                }
 
                 for (Figura f:figuras) {
                     boolean dentro = f.estaDentro(x,y);
@@ -96,7 +121,7 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
                                     Circulo c = (Circulo) f;
                                     if (circuloActivo.detectarCirculo(c)){
                                         if (circuloActivo.getRadio()>c.getRadio()){
-                                            float radio = c.getRadio();
+                                            float radio = c.getRadio()/5;
                                             this.figuras.remove(f);
                                             circuloActivo.aumentarRadio(radio);
                                             break;
@@ -107,6 +132,7 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
 
                         }
                         this.modificandoFig=false;
+
 
                     }
                 }
@@ -128,7 +154,7 @@ public class MoverFigura extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.img);
-        figuras.add(new Imagen(500F, 500F,bmp, (int) (bmp.getHeight()*0.3), (int) (bmp.getWidth()*0.3)));
+        figuras.add(new Imagen(500F, 500F,bmp, (int) (bmp.getHeight()*0.1), (int) (bmp.getWidth()*0.1)));
         btnAñadir = new Boton("+", 100, 100, 50,Color.BLUE);
 
         hilo = new HiloJuego(this);
